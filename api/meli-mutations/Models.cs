@@ -1,13 +1,21 @@
-namespace meli_mutations;
+using System.Runtime.Serialization;
+
+namespace meli_mutations.Model;
 
 public class Models {
     public class DnaRequest
     {
-        public string[] data { get; set; }
+        [DataMember(Name="data")]
+        public string[] Data { get; set; } = default!;
     }
 
     public class DnaResponse
     {
-        public bool result { get; set; }
+        [DataMember(Name="result")]
+        public bool Result { get; set; }
+    }
+
+    public class StatusResponse {
+        
     }
 }

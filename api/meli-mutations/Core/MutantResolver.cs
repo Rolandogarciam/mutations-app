@@ -4,7 +4,7 @@ using System.Text;
 
 namespace meli_mutations.Core;
 
-public static class MutationResolver {
+public static class MutantResolver {
     //   Complexity
     //   Time: O(n^2) Quadratic Time
     //   Space: O(1)
@@ -27,26 +27,30 @@ public static class MutationResolver {
                 if (mutations <= 0) 
                     break;
 
-                if (y < N - 3) { 
+                if (y < N - 3 - 1 ) { 
                     strBldrSouth.Append(dna[x][y]);
                     strBldrSouth.Append(dna[x][y + 1]);
                     strBldrSouth.Append(dna[x][y + 2]);
                     strBldrSouth.Append(dna[x][y + 3]);
 
-                    strBldrSouthEast.Append(dna[x][y]);
-                    strBldrSouthEast.Append(dna[x + 1][y + 1]);
-                    strBldrSouthEast.Append(dna[x + 2][y + 2]);
-                    strBldrSouthEast.Append(dna[x + 3][y + 3]);
                 }
 
-                if (x < N - 3) {
+                if (x < N - 3 - 1) {
                     strBldrEast.Append(dna[x][y]);
                     strBldrEast.Append(dna[x + 1][y]);
                     strBldrEast.Append(dna[x + 2][y]);
                     strBldrEast.Append(dna[x + 3][y]);
                 }
 
-                if (y > 3) {
+                if (x < N - 3 - 1 && y < N - 3 - 1 ) { 
+                    strBldrSouthEast.Append(dna[x][y]);
+                    strBldrSouthEast.Append(dna[x + 1][y + 1]);
+                    strBldrSouthEast.Append(dna[x + 2][y + 2]);
+                    strBldrSouthEast.Append(dna[x + 3][y + 3]);
+                }
+
+
+                if (x < N - 3 - 1 && y > 3) {
                     strBldrNorthEast.Append(dna[x][y]);
                     strBldrNorthEast.Append(dna[x + 1][y - 1]);
                     strBldrNorthEast.Append(dna[x + 2][y - 2]);
