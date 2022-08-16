@@ -122,7 +122,7 @@ public static class MutantResolver {
                     || coordinateY == coordinateFoundY-3);
                 break;
             default:
-                throw new InvalidOperationException("not found direction");
+                throw new InvalidOperationException("Not found direction");
         }
         return result;
     }

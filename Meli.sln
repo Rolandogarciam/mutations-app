@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{1BEB0BEB-D1A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "meli-mutations", "api\meli-mutations\meli-mutations.csproj", "{E67762D8-CB06-4863-B7D1-A57D55BAD1A3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4EFDA088-654C-4BD1-9579-3C83222090B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "meli-test", "test\meli-mutations\meli-test.csproj", "{A0E24CA1-3089-441C-B686-7E1884BC287A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,13 @@ Global
 		{E67762D8-CB06-4863-B7D1-A57D55BAD1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E67762D8-CB06-4863-B7D1-A57D55BAD1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E67762D8-CB06-4863-B7D1-A57D55BAD1A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0E24CA1-3089-441C-B686-7E1884BC287A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0E24CA1-3089-441C-B686-7E1884BC287A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0E24CA1-3089-441C-B686-7E1884BC287A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0E24CA1-3089-441C-B686-7E1884BC287A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E67762D8-CB06-4863-B7D1-A57D55BAD1A3} = {1BEB0BEB-D1AA-4B24-B858-DFFBBDECA881}
+		{A0E24CA1-3089-441C-B686-7E1884BC287A} = {4EFDA088-654C-4BD1-9579-3C83222090B8}
 	EndGlobalSection
 EndGlobal
