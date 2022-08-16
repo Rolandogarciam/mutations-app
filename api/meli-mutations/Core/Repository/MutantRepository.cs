@@ -16,8 +16,12 @@ public class MutantRepository: IMutantRepository  {
     public async Task<Azure.Response> Add(Mutant entity)
         => await this._tableStorageService.AddEntityAsync(entity);
 
-    public async Task<Mutant> Get(string rowKey) {
+    public async Task<Mutant> Get(string rowKey) 
+    {
         var entity = await this._tableStorageService.QueryAsync(x => x.RowKey == rowKey && x.PartitionKey == "mutations");
         return entity.FirstOrDefault();
     }
+
+    public async Task<IEnumerable<Mutant>> All()
+        => await this._tableStorageService.QueryAsync(x => x.PartitionKey == "mutations");
 }

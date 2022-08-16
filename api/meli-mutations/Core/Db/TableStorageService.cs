@@ -11,11 +11,9 @@ public class TableStorageService<T> :
     public TableStorageService(TableServiceClient tableServiceClient, string tableName)
         => _tableClient = tableServiceClient.GetTableClient(tableName);
 
-    public async Task<List<T>> QueryAsync(Expression<Func<T, bool>> query)
+    public async Task<IEnumerable<T>> QueryAsync(Expression<Func<T, bool>> query)
         => await _tableClient.QueryAsync(query).ToListAsync();
 
-    public async Task<IEnumerable<T>> GetAllRowsAsync()
-        => await _tableClient.QueryAsync<T>().ToListAsync();
     
     public async Task<Azure.Response> AddEntityAsync(T value)
         => await _tableClient.AddEntityAsync<T>(value);

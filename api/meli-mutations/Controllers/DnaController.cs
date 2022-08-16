@@ -30,13 +30,13 @@ public class DnaController : ControllerBase
     [HttpPost("mutation")]
     public async Task<IActionResult> Mutation(Models.DnaRequest dnaReq)
     {
-        string[] data = dnaReq.Data;
+        string[] data = dnaReq.data;
         string hash = HashResolver.Resolve(string.Join("", data));
 
         var mutantEntity = await _mutantRepository.Get(hash);
         if (mutantEntity != null) {
             return Ok(new Models.DnaResponse{
-                Result = mutantEntity.Value
+                result = mutantEntity.Value
             });
         }
         
@@ -54,14 +54,23 @@ public class DnaController : ControllerBase
         }
         
         return Ok(new Models.DnaResponse {
-            Result = isMutant
+            result = isMutant
         });
     }
 
-    [HttpGet("status")]
-    public async Task<IActionResult> Status()
+    [HttpGet("stats")]
+    public async Task<IActionResult> Stats()
     {
-        return Ok("ok");
+        var rows = await _mutantRepository.All();
+
+        int countHuman = rows.Where(x => !x.Value).Count()
+        , countMutant = rows.Where(x => x.Value).Count();
+
+        return Ok(new Models.StatsResponse {
+            count_human_dna = countHuman,
+            count_mutant_dna = countMutant,
+            ratio = Math.Round((double)countMutant / countHuman, 2),
+        });
     }
 }
 
