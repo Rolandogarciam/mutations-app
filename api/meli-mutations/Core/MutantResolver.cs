@@ -1,80 +1,129 @@
-using System.Threading.Tasks;
-using System.Linq;
 using System.Text;
 
 namespace meli_mutations.Core;
 
 public static class MutantResolver {
+    private const int MAX_MUTATION = 2;
+    private const string A_PATTERN_MUTANT = "AAAA";
+    private const string C_PATTERN_MUTANT = "CCCC";
+    private const string G_PATTERN_MUTANT = "GGGG";
+    private const string T_PATTERN_MUTANT = "TTTT";
+
     //   Complexity
-    //   Time: O(n^2) Quadratic Time
+    //   Time: O(n^2) Quadratic Time => m = matrix len
     //   Space: O(1)
     public static bool Resolve(string[] dna) 
     {
-        StringBuilder strBldrSouth = new StringBuilder();
-        StringBuilder strBldrEast = new StringBuilder();
-        StringBuilder strBldrSouthEast = new StringBuilder();
-        StringBuilder strBldrNorthEast = new StringBuilder();
-        
-        string[] feasibleResult = {"AAAA", "GGGG", "CCCC", "TTTT"};
-        int N = dna.Length;
-        
-        int mutations = 2;
+        int mutations = 0
+        , N = dna.Length
+        , M = A_PATTERN_MUTANT.Length
+        , coordinateFoundX = N
+        , coordinateFoundY = N;
 
-        for (int x = 0; x < N; x++) 
+        StringBuilder southStr = new StringBuilder()
+        , eastStr = new StringBuilder()
+        , southEastStr = new StringBuilder()
+        , northEastStr = new StringBuilder();
+
+        for (int y = 0; y < N; y++) 
         {
-            for (int y = 0; y < N; y++) 
+            for (int x = 0; x < N; x++) 
             {
-                if (mutations <= 0) 
+                if (mutations >= MAX_MUTATION) 
                     break;
-
-                if (y < N - 3 - 1 ) { 
-                    strBldrSouth.Append(dna[x][y]);
-                    strBldrSouth.Append(dna[x][y + 1]);
-                    strBldrSouth.Append(dna[x][y + 2]);
-                    strBldrSouth.Append(dna[x][y + 3]);
-
+                    
+                if (y < N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, "south")) { 
+                    southStr.Append(dna[y+0][x]);
+                    southStr.Append(dna[y+1][x]);
+                    southStr.Append(dna[y+2][x]);
+                    southStr.Append(dna[y+3][x]);
                 }
 
-                if (x < N - 3 - 1) {
-                    strBldrEast.Append(dna[x][y]);
-                    strBldrEast.Append(dna[x + 1][y]);
-                    strBldrEast.Append(dna[x + 2][y]);
-                    strBldrEast.Append(dna[x + 3][y]);
+                if (x < N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, "east")) {
+                    eastStr.Append(dna[y][x+0]);
+                    eastStr.Append(dna[y][x+1]);
+                    eastStr.Append(dna[y][x+2]);
+                    eastStr.Append(dna[y][x+3]);
                 }
 
-                if (x < N - 3 - 1 && y < N - 3 - 1 ) { 
-                    strBldrSouthEast.Append(dna[x][y]);
-                    strBldrSouthEast.Append(dna[x + 1][y + 1]);
-                    strBldrSouthEast.Append(dna[x + 2][y + 2]);
-                    strBldrSouthEast.Append(dna[x + 3][y + 3]);
+                if (y < N-M && x < N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, "southEast")) { 
+                    southEastStr.Append(dna[y][x]);
+                    southEastStr.Append(dna[y+1][x+1]);
+                    southEastStr.Append(dna[y+2][x+2]);
+                    southEastStr.Append(dna[y+3][x+3]);
                 }
 
-
-                if (x < N - 3 - 1 && y > 3) {
-                    strBldrNorthEast.Append(dna[x][y]);
-                    strBldrNorthEast.Append(dna[x + 1][y - 1]);
-                    strBldrNorthEast.Append(dna[x + 2][y - 2]);
-                    strBldrNorthEast.Append(dna[x + 3][y - 3]);
+                if (x < N-M && y >= M-1 && !IsCoalition(coordinateFoundX, coordinateFoundY, x+3, y-3, "northEast")) {
+                    northEastStr.Append(dna[y][x]);
+                    northEastStr.Append(dna[y-1][x+1]);
+                    northEastStr.Append(dna[y-2][x+2]);
+                    northEastStr.Append(dna[y-3][x+3]);
                 }
 
-                if (feasibleResult.Any(x => x == strBldrSouth.ToString()))
-                    mutations--;
-                
-                if (feasibleResult.Any(x => x == strBldrSouthEast.ToString()))
-                    mutations--;
+                FindMutation(southStr.ToString(), x, y, ref coordinateFoundX, ref coordinateFoundY, ref mutations);
+                FindMutation(eastStr.ToString(), x, y, ref coordinateFoundX, ref coordinateFoundY, ref mutations);
+                FindMutation(southEastStr.ToString(), x, y, ref coordinateFoundX, ref coordinateFoundY, ref mutations);
+                FindMutation(northEastStr.ToString(), x, y, ref coordinateFoundX, ref coordinateFoundY, ref mutations);
 
-                if (feasibleResult.Any(x => x == strBldrEast.ToString()))
-                    mutations--;
-
-                if (feasibleResult.Any(x => x == strBldrNorthEast.ToString()))
-                    mutations--;
-                
-                strBldrSouth.Clear();
-                strBldrEast.Clear();
-                strBldrSouthEast.Clear();
-                strBldrNorthEast.Clear();
+                southStr.Clear();
+                eastStr.Clear();
+                southEastStr.Clear();
+                northEastStr.Clear();
             }
         }
-        return (mutations <= 0);
+        return (mutations >= MAX_MUTATION);
     } 
+
+    private static void FindMutation(string pattern, int x, int y, ref int coordinateX, ref int coordinateY, ref int mutations) 
+    {
+        if(A_PATTERN_MUTANT == pattern || C_PATTERN_MUTANT == pattern || G_PATTERN_MUTANT == pattern || T_PATTERN_MUTANT == pattern) {
+            mutations++;
+            coordinateX = x;
+            coordinateY = y;
+        } 
+    }
+
+    //
+    // Get rid with intersection between two line segment
+    //
+    private static bool IsCoalition(int coordinateFoundX, int coordinateFoundY, int coordinateX, int coordinateY, string direction) {
+        bool result = false;
+        switch (direction) {
+            case "south":
+                result = (
+                    coordinateY == coordinateFoundY+1 
+                    || coordinateY == coordinateFoundY+2
+                    || coordinateY == coordinateFoundY+3);
+                break;
+            case "east":
+                result = (
+                    coordinateX == coordinateFoundX+1 
+                    || coordinateX == coordinateFoundX+2
+                    || coordinateX == coordinateFoundX+3);
+                break;
+            case "southEast":
+                result = (
+                    coordinateX == coordinateFoundX+1 
+                    || coordinateX == coordinateFoundX+2
+                    || coordinateX == coordinateFoundX+3)
+                    && (
+                    coordinateY == coordinateFoundY+1 
+                    || coordinateY == coordinateFoundY+2
+                    || coordinateY == coordinateFoundY+3);
+                break;
+            case "northEast":
+                result = (
+                    coordinateX == coordinateFoundX+1 
+                    || coordinateX == coordinateFoundX+2
+                    || coordinateX == coordinateFoundX+3)
+                    && (
+                    coordinateY == coordinateFoundY-1 
+                    || coordinateY == coordinateFoundY-2
+                    || coordinateY == coordinateFoundY-3);
+                break;
+            default:
+                throw new InvalidOperationException("not found direction");
+        }
+        return result;
+    }
 }
