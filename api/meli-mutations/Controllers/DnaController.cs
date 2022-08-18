@@ -1,10 +1,11 @@
 using Microsoft.Azure.Cosmos;
 using Microsoft.AspNetCore.Mvc;
-using meli_mutations.Core;
+using meli_mutations.Core.Resolver;
 using meli_mutations.Model;
 using meli_mutations.Repository;
 using Azure.Data.Tables;
 using static meli_mutations.Entity.Entities;
+using System.Net;
 
 namespace meli_mutations.Controllers;
 
@@ -30,17 +31,24 @@ public class DnaController : ControllerBase
     [HttpPost("mutation")]
     public async Task<IActionResult> Mutation(Models.DnaRequest dnaReq)
     {
+        bool isMutant = default;
         string[] data = dnaReq.data;
+        if (MutantResolver.Resolve(data)) 
+            throw new ApplicationException("Dna should be NxN");
+
         string hash = HashResolver.Resolve(string.Join("", data));
+        ObjectResult forbiddenResult = new ObjectResult("") { StatusCode = (int)HttpStatusCode.Forbidden };
 
         var mutantEntity = await _mutantRepository.Get(hash);
+
         if (mutantEntity != null) {
-            return Ok(new Models.DnaResponse{
-                result = mutantEntity.Value
-            });
+            isMutant = mutantEntity.Value;
+            if(!isMutant)
+                return forbiddenResult;
+            return Ok();
         }
         
-        bool isMutant = MutantResolver.Resolve(data);
+        isMutant = MutantResolver.Resolve(data);
         var mutant = new Mutant() {
             RowKey = hash,
             PartitionKey = "mutations",
@@ -52,10 +60,9 @@ public class DnaController : ControllerBase
                 throw new ApplicationException("Error inserting on CosmosDb");
             }
         }
-        
-        return Ok(new Models.DnaResponse {
-            result = isMutant
-        });
+        if(!isMutant)
+            return forbiddenResult;
+        return Ok();
     }
 
     [HttpGet("stats")]
