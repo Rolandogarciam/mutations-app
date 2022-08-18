@@ -84,33 +84,39 @@ public static class MutantResolver {
         switch (direction) {
             case "south":
                 result = (
-                    coordinateY == coordinateFoundY+1 && coordinateX == coordinateFoundX
-                    || coordinateY == coordinateFoundY+2 && coordinateX == coordinateFoundX
-                    || coordinateY == coordinateFoundY+3 && coordinateX == coordinateFoundX) ;
+                    coordinateX == coordinateFoundX
+                    || coordinateY == coordinateFoundY+1
+                    || coordinateY == coordinateFoundY+2
+                    || coordinateY == coordinateFoundY+3) && coordinateX == coordinateFoundX;
                 break;
             case "east":
                 result = (
-                    coordinateX == coordinateFoundX+1 && coordinateY == coordinateFoundY
-                    || coordinateX == coordinateFoundX+2 && coordinateY == coordinateFoundY
-                    || coordinateX == coordinateFoundX+3 && coordinateY == coordinateFoundY);
+                    coordinateX == coordinateFoundX
+                    || coordinateX == coordinateFoundX+1
+                    || coordinateX == coordinateFoundX+2
+                    || coordinateX == coordinateFoundX+3) && coordinateY == coordinateFoundY;
                 break;
             case "southEast":
                 result = (
-                    coordinateX == coordinateFoundX+1 
+                    coordinateX == coordinateFoundX
+                    || coordinateX == coordinateFoundX+1 
                     || coordinateX == coordinateFoundX+2
                     || coordinateX == coordinateFoundX+3)
                     && (
-                    coordinateY == coordinateFoundY+1 
+                    coordinateX == coordinateFoundX
+                    || coordinateY == coordinateFoundY+1 
                     || coordinateY == coordinateFoundY+2
                     || coordinateY == coordinateFoundY+3);
                 break;
             case "northEast":
                 result = (
-                    coordinateX == coordinateFoundX+1 
+                    coordinateX == coordinateFoundX
+                    || coordinateX == coordinateFoundX+1 
                     || coordinateX == coordinateFoundX+2
                     || coordinateX == coordinateFoundX+3)
                     && (
-                    coordinateY == coordinateFoundY-1 
+                    coordinateY == coordinateFoundY 
+                    || coordinateY == coordinateFoundY-1 
                     || coordinateY == coordinateFoundY-2
                     || coordinateY == coordinateFoundY-3);
                 break;
