@@ -96,7 +96,7 @@ public class DnaResovlerTest
     }
 
     [Fact]
-    public void WhenTheDnaIsCoalitionWithDifferentDirection()
+    public void WhenTheDnaIsIntersectionWithDifferentDirection()
     {
         string[] dna = new string[] {
             "GCCAV",
@@ -110,7 +110,7 @@ public class DnaResovlerTest
     }
 
     [Fact]
-    public void WhenTheDnaIsCoalitionWithSameDirection()
+    public void WhenTheDnaIsIntersectionWithSameDirection()
     {
         string[] dna = new string[] {
             "CCTAGCC",
@@ -125,7 +125,7 @@ public class DnaResovlerTest
     }
 
     [Fact]
-    public void WhenTheDnaIsCoalitionWithSameDirectionOblique()
+    public void WhenTheDnaIsIntersectionWithSameDirectionOblique()
     {
         string[] dna = new string[] {
             "GCGTACGTAC",

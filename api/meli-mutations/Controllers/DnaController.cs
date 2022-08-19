@@ -97,6 +97,8 @@ public class DnaController : ControllerBase
         return Ok(stats);
     }
 
+    // Complexity 
+    // Time: O(N)
     private bool ContainsValidCharacters(string[] dna) 
     {
         int N = dna.Length;
