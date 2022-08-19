@@ -17,7 +17,7 @@ public class Program
         builder.Services.AddResponseCaching();
         builder.Services.AddSingleton<TableServiceClient>(new TableServiceClient(Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING")));
         builder.Services.AddSingleton<ITableStorageService<Mutant>>(provider =>
-            new TableStorageService<Mutant>(provider.GetRequiredService<TableServiceClient>(), "mutations-app"));
+            new TableStorageService<Mutant>(provider.GetRequiredService<TableServiceClient>(), "mutant-app"));
         builder.Services.AddScoped<IMutantRepository, MutantRepository>();
 
 
