@@ -3,14 +3,10 @@ using System.Runtime.Serialization;
 namespace meli_mutations.Model;
 
 public class Models {
+    
     public class DnaRequest
     {
-        public string[] data { get; set; } = default!;
-    }
-
-    public class DnaResponse
-    {
-        public bool result { get; set; }
+        public string[] dna { get; set; } = default!;
     }
 
     public class StatsResponse {

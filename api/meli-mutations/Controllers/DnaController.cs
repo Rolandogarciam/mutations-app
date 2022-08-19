@@ -30,7 +30,7 @@ public class DnaController : ControllerBase
     public async Task<IActionResult> Mutation(Models.DnaRequest dnaReq)
     {
         bool isMutant = default;
-        string[] data = dnaReq.data;
+        string[] data = dnaReq.dna;
         ObjectResult forbiddenResult = new ObjectResult("") { StatusCode = (int)HttpStatusCode.Forbidden };
         try {
             if (!MutantResolver.ValidDna(data)) 
