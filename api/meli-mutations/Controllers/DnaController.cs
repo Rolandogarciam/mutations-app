@@ -26,11 +26,11 @@ public class DnaController : ControllerBase
     public IActionResult HealhCheck()
         => Ok("alive");
 
-    [HttpPost("mutation")]
-    public async Task<IActionResult> Mutation(Models.DnaRequest dnaReq)
+    [HttpPost("mutant")]
+    public async Task<IActionResult> Mutant(Models.DnaRequest dnaReq)
     {
         bool isMutant = default;
-        string[] data = dnaReq.dna;
+        string[] data = dnaReq.Dna;
         ObjectResult forbiddenResult = new ObjectResult("") { StatusCode = (int)HttpStatusCode.Forbidden };
         try {
             if (!MutantResolver.ValidDna(data)) 
@@ -82,11 +82,13 @@ public class DnaController : ControllerBase
         int countHuman = rows.Where(x => !x.Value).Count()
         , countMutant = rows.Where(x => x.Value).Count();
 
-        return Ok(new Models.StatsResponse {
-            count_human_dna = countHuman,
-            count_mutant_dna = countMutant,
-            ratio = Math.Round((double)countMutant / countHuman, 2),
-        });
+        var stats = new Models.StatsResponse();
+        stats.CountMutantDna = countMutant;
+        stats.CountHumanDna = countHuman;
+        if(countHuman > 0) 
+            stats.Ratio = Math.Round((double)countMutant / countHuman, 2);
+
+        return Ok(stats);
     }
 }
 
