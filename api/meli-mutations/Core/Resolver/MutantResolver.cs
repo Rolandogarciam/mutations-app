@@ -10,8 +10,8 @@ public static class MutantResolver {
     public const string T_PATTERN_MUTANT = "TTTT";
 
     //   Complexity
-    //   Time: O(n^2*m) Quadratic Time => n = matrix len & m = pattern length
-    //   Space: O(1)
+    //   Time: O(n^2*m) Quadratic Time => n = matrix len & m = pattern len
+    //   Space: O(m*k) => m = pattern len & k = feasible direction len
     public static bool Resolve(string[] dna) 
     {
         int mutations = 0
@@ -37,19 +37,19 @@ public static class MutantResolver {
                 
                 for(int k = 0;k < M; k++) {
 
-                    if (y <= N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.SOUTH)) {
+                    if (y <= N-M && !IsIntersection(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.SOUTH)) {
                         southStr.Append(dna[y+k][x]);
                     }
 
-                    if (x <= N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.EAST)) {
+                    if (x <= N-M && !IsIntersection(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.EAST)) {
                         eastStr.Append(dna[y][x+k]);
                     }
 
-                    if (y <= N-M && x < N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.SOUTHEAST)) { 
+                    if (y <= N-M && x < N-M && !IsIntersection(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.SOUTHEAST)) { 
                         southEastStr.Append(dna[y+k][x+k]);
                     }
 
-                    if (x <= N-M && y >= M-1 && !IsCoalition(coordinateFoundX, coordinateFoundY, x+3, y-3, DirectionEnum.NORTHEAST)) {
+                    if (x <= N-M && y >= M-1 && !IsIntersection(coordinateFoundX, coordinateFoundY, x+3, y-3, DirectionEnum.NORTHEAST)) {
                         northEastStr.Append(dna[y-k][x+k]);
                     }
                 }
@@ -80,7 +80,7 @@ public static class MutantResolver {
     //
     // Prevent intersection with a found segment over the same direction.
     //
-    private static bool IsCoalition(int coordinateFoundX, int coordinateFoundY, int coordinateX, int coordinateY, DirectionEnum direction) {
+    private static bool IsIntersection(int coordinateFoundX, int coordinateFoundY, int coordinateX, int coordinateY, DirectionEnum direction) {
         bool result = false;
         switch (direction) {
             case DirectionEnum.SOUTH:
@@ -127,7 +127,8 @@ public static class MutantResolver {
         return result;
     }
 
-    // Complexity Time: O(N)
+    // Complexity 
+    // Time: O(N)
     public static bool ValidDna(string[] data ) {
         int N = data.Length;
         bool result = true;
