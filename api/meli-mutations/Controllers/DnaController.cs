@@ -24,51 +24,42 @@ public class DnaController : ControllerBase
 
     [HttpGet("healthcheck")]
     public IActionResult HealhCheck()
-        => Ok("alive");
+    {
+        return Ok("alive");
+    }
 
     [HttpPost("mutation")]
     public async Task<IActionResult> Mutation(Models.DnaRequest dnaReq)
     {
         bool isMutant = default;
         string[] data = dnaReq.data;
+        if (MutantResolver.Resolve(data)) 
+            throw new ApplicationException("Dna should be NxN");
+
+        string hash = HashResolver.Resolve(string.Join("", data));
         ObjectResult forbiddenResult = new ObjectResult("") { StatusCode = (int)HttpStatusCode.Forbidden };
-        try {
-            if (!MutantResolver.ValidDna(data)) 
-                throw new ApplicationException("Dna should be NxN");
 
-            string hash = HashResolver.Resolve(string.Join("", data));
+        var mutantEntity = await _mutantRepository.Get(hash);
 
-            var mutantEntity = await _mutantRepository.Get(hash);
-            if (mutantEntity != null) {
-                isMutant = mutantEntity.Value;
-                if(!isMutant)
-                    return forbiddenResult;
-                return Ok();
-            }
-            
-            isMutant = MutantResolver.Resolve(data);
-            var mutant = new Mutant() {
-                RowKey = hash,
-                PartitionKey = "mutations",
-                Value = isMutant
-            };
-            
-            using(var response = await _mutantRepository.Add(mutant)) {
-                if(response.IsError) {
-                    throw new Exception("Error inserting on CosmosDb");
-                }
+        if (mutantEntity != null) {
+            isMutant = mutantEntity.Value;
+            if(!isMutant)
+                return forbiddenResult;
+            return Ok();
+        }
+        
+        isMutant = MutantResolver.Resolve(data);
+        var mutant = new Mutant() {
+            RowKey = hash,
+            PartitionKey = "mutations",
+            Value = isMutant
+        };
+        
+        using(var response = await _mutantRepository.Add(mutant)) {
+            if(response.IsError) {
+                throw new ApplicationException("Error inserting on CosmosDb");
             }
         }
-        catch(ApplicationException ex) {
-            this._logger.LogError(ex.ToString());
-            return BadRequest(ex);
-        }
-        catch(Exception ex) {
-            string uuid = new Guid().ToString();
-            this._logger.LogCritical($"UUID: {uuid} Message: {ex.ToString()}");
-            return StatusCode(StatusCodes.Status500InternalServerError, $"See inner the log file: {uuid}");
-        } 
-
         if(!isMutant)
             return forbiddenResult;
         return Ok();
