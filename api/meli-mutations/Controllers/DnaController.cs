@@ -60,12 +60,12 @@ public class DnaController : ControllerBase
             }
         }
         catch(ApplicationException ex) {
-            this._logger.LogError(ex.ToString());
+            this._logger.LogWarning(ex.ToString());
             return BadRequest(ex);
         }
         catch(Exception ex) {
             string uuid = new Guid().ToString();
-            this._logger.LogCritical($"UUID: {uuid} Message: {ex.ToString()}");
+            this._logger.LogError($"UUID: {uuid} Message: {ex.ToString()}");
             return StatusCode(StatusCodes.Status500InternalServerError, $"See inner the log file: {uuid}");
         } 
 
