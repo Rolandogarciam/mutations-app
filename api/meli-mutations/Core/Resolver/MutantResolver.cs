@@ -37,19 +37,19 @@ public static class MutantResolver {
                 
                 for(int k = 0;k < M; k++) {
 
-                    if (y <= N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, "south")) {
+                    if (y <= N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.SOUTH)) {
                         southStr.Append(dna[y+k][x]);
                     }
 
-                    if (x <= N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, "east")) {
+                    if (x <= N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.EAST)) {
                         eastStr.Append(dna[y][x+k]);
                     }
 
-                    if (y <= N-M && x < N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, "southEast")) { 
+                    if (y <= N-M && x < N-M && !IsCoalition(coordinateFoundX, coordinateFoundY, x, y, DirectionEnum.SOUTHEAST)) { 
                         southEastStr.Append(dna[y+k][x+k]);
                     }
 
-                    if (x <= N-M && y >= M-1 && !IsCoalition(coordinateFoundX, coordinateFoundY, x+3, y-3, "northEast")) {
+                    if (x <= N-M && y >= M-1 && !IsCoalition(coordinateFoundX, coordinateFoundY, x+3, y-3, DirectionEnum.NORTHEAST)) {
                         northEastStr.Append(dna[y-k][x+k]);
                     }
                 }
@@ -69,6 +69,7 @@ public static class MutantResolver {
     {   
         foreach(string pattern in patterns) {
             if(A_PATTERN_MUTANT == pattern || C_PATTERN_MUTANT == pattern || G_PATTERN_MUTANT == pattern || T_PATTERN_MUTANT == pattern) {
+                //Console.WriteLine($"found: {pattern}  x {x} y {y}");
                 mutations++;
                 coordinateX = x;
                 coordinateY = y;
@@ -77,26 +78,26 @@ public static class MutantResolver {
     }
 
     //
-    // Get rid with intersection between two line segment
+    // Prevent intersection with a found segment over the same direction.
     //
-    private static bool IsCoalition(int coordinateFoundX, int coordinateFoundY, int coordinateX, int coordinateY, string direction) {
+    private static bool IsCoalition(int coordinateFoundX, int coordinateFoundY, int coordinateX, int coordinateY, DirectionEnum direction) {
         bool result = false;
         switch (direction) {
-            case "south":
+            case DirectionEnum.SOUTH:
                 result = (
                     coordinateX == coordinateFoundX
                     || coordinateY == coordinateFoundY+1
                     || coordinateY == coordinateFoundY+2
                     || coordinateY == coordinateFoundY+3) && coordinateX == coordinateFoundX;
                 break;
-            case "east":
+            case DirectionEnum.EAST:
                 result = (
                     coordinateX == coordinateFoundX
                     || coordinateX == coordinateFoundX+1
                     || coordinateX == coordinateFoundX+2
                     || coordinateX == coordinateFoundX+3) && coordinateY == coordinateFoundY;
                 break;
-            case "southEast":
+            case DirectionEnum.SOUTHEAST:
                 result = (
                     coordinateX == coordinateFoundX
                     || coordinateX == coordinateFoundX+1 
@@ -108,7 +109,7 @@ public static class MutantResolver {
                     || coordinateY == coordinateFoundY+2
                     || coordinateY == coordinateFoundY+3);
                 break;
-            case "northEast":
+            case DirectionEnum.NORTHEAST:
                 result = (
                     coordinateX == coordinateFoundX
                     || coordinateX == coordinateFoundX+1 

@@ -94,4 +94,71 @@ public class DnaResovlerTest
 
         Assert.False(MutantResolver.Resolve(dna));
     }
+
+    [Fact]
+    public void WhenTheDnaIsCoalitionWithDifferentDirection()
+    {
+        string[] dna = new string[] {
+            "GCCAV",
+            "CGCCT",
+            "GCCCC",
+            "CGCGT",
+            "TGAAT"
+        };
+
+        Assert.True(MutantResolver.Resolve(dna));
+    }
+
+    [Fact]
+    public void WhenTheDnaIsCoalitionWithSameDirection()
+    {
+        string[] dna = new string[] {
+            "CCTAGCC",
+            "CGCCTCA",
+            "CGCACTA",
+            "CTCGAAC",
+            "CAGATGA",
+            "CATATTA",
+            "CACATCG"
+        };
+        Assert.False(MutantResolver.Resolve(dna));
+    }
+
+    [Fact]
+    public void WhenTheDnaIsCoalitionWithSameDirectionOblique()
+    {
+        string[] dna = new string[] {
+            "GCGTACGTAC",
+            "AGGTACGTAC",
+            "CTGGTTCCTT",
+            "CCTGTTCCTT",
+            "TTTCGCGGGA",
+            "AAGTAGCTAG",
+            "ACGTGTACCT",
+            "GGCTTAGTAC",
+            "TACGACGTAC",
+            "AGCGGTACAG"
+        };
+
+        Assert.False(MutantResolver.Resolve(dna));
+    }
+
+    [Fact]
+    public void WhenTheDnaIsMutantWithSameDirectionOblique()
+    {
+        string[] dna = new string[] {
+            "GCGTACGTAC",
+            "AGGTACGTAC",
+            "CTGGTTCCTT",
+            "CCTGTTCCTT",
+            "TTTCGCGGGA",
+            "AAGTAGCTAG",
+            "ACGTGTGCCT",
+            "GGCTTAGGAC",
+            "TACGACGTAC",
+            "AGCGGTACAG"
+        };
+
+        Assert.True(MutantResolver.Resolve(dna));
+    }
 }
