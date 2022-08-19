@@ -3,34 +3,41 @@ using meli_mutations.Db;
 using meli_mutations.Repository;
 using static meli_mutations.Entity.Entities;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace meli_mutations;
 
-// Add services to the container.
+public class Program 
+{
+    public static void Main(string[] args) {
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddResponseCaching();
-builder.Services.AddSingleton<TableServiceClient>(new TableServiceClient(Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING")));
-builder.Services.AddSingleton<ITableStorageService<Mutant>>(provider =>
-    new TableStorageService<Mutant>(provider.GetRequiredService<TableServiceClient>(), "mutations-app"));
-builder.Services.AddScoped<IMutantRepository, MutantRepository>();
+        // Add services to the container.
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddResponseCaching();
+        builder.Services.AddSingleton<TableServiceClient>(new TableServiceClient(Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING")));
+        builder.Services.AddSingleton<ITableStorageService<Mutant>>(provider =>
+            new TableStorageService<Mutant>(provider.GetRequiredService<TableServiceClient>(), "mutations-app"));
+        builder.Services.AddScoped<IMutantRepository, MutantRepository>();
 
 
-builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+        var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
-app.UseCors();
+        app.UseCors();
 
-app.UseResponseCaching();
+        app.UseResponseCaching();
 
-app.UseAuthorization();
+        app.UseAuthorization();
 
-app.MapControllers();
+        app.MapControllers();
 
-app.Run();
+        app.Run();
+    }
+} 

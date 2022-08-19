@@ -6,6 +6,7 @@ using meli_mutations.Repository;
 using Azure.Data.Tables;
 using static meli_mutations.Entity.Entities;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace meli_mutations.Controllers;
 
@@ -13,6 +14,7 @@ namespace meli_mutations.Controllers;
 [Route("dna")]
 public class DnaController : ControllerBase
 {
+    private static readonly Regex ValidCharRegex = new(@"[^ACGT]", RegexOptions.Compiled);
     private readonly ILogger<DnaController> _logger;
     private readonly IMutantRepository _mutantRepository;
 
@@ -30,13 +32,17 @@ public class DnaController : ControllerBase
     public async Task<IActionResult> Mutant(Models.DnaRequest dnaReq)
     {
         bool isMutant = default;
-        string[] data = dnaReq.Dna;
+        string[] dna = dnaReq.Dna;
         ObjectResult forbiddenResult = new ObjectResult("") { StatusCode = (int)HttpStatusCode.Forbidden };
         try {
-            if (!MutantResolver.ValidDna(data)) 
+
+            if(!ContainsValidCharacters(dna))
+                throw new ApplicationException("Dna contains invalid characters");
+                
+            if (!MutantResolver.ValidDna(dna)) 
                 throw new ApplicationException("Dna should be NxN");
 
-            string hash = HashResolver.Resolve(string.Join("", data));
+            string hash = HashResolver.Resolve(string.Join("", dna));
 
             var mutantEntity = await _mutantRepository.Get(hash);
             if (mutantEntity != null) {
@@ -46,7 +52,7 @@ public class DnaController : ControllerBase
                 return Ok();
             }
             
-            isMutant = MutantResolver.Resolve(data);
+            isMutant = MutantResolver.Resolve(dna);
             var mutant = new Mutant() {
                 RowKey = hash,
                 PartitionKey = "mutations",
@@ -61,7 +67,7 @@ public class DnaController : ControllerBase
         }
         catch(ApplicationException ex) {
             this._logger.LogWarning(ex.ToString());
-            return BadRequest(ex);
+            return BadRequest(ex.Message);
         }
         catch(Exception ex) {
             string uuid = new Guid().ToString();
@@ -89,6 +95,16 @@ public class DnaController : ControllerBase
             stats.Ratio = Math.Round((double)countMutant / countHuman, 2);
 
         return Ok(stats);
+    }
+
+    private bool ContainsValidCharacters(string[] dna) 
+    {
+        int N = dna.Length;
+        for (int i = 0; i < N; i++) {
+            if(DnaController.ValidCharRegex.IsMatch(dna[i]))
+                return false;
+        }
+        return true;
     }
 }
 

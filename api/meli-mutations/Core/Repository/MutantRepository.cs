@@ -3,7 +3,7 @@ using static meli_mutations.Entity.Entities;
 
 namespace meli_mutations.Repository;
 
-public class MutantRepository: IMutantRepository  {
+public class MutantRepository: IMutantRepository {
     private readonly ITableStorageService<Mutant> _tableStorageService;
     public MutantRepository(ITableStorageService<Mutant> tableStorageService)
     {
