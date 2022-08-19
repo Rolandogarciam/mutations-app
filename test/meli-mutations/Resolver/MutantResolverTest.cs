@@ -7,7 +7,7 @@ public class DnaResovlerTest
 {
     [Fact]
     public void WhenTheDnaIsHuman()
-    {   
+    {
         string[] dna = new string[] {
             "GTGTGTA",
             "CGTCTAA",
@@ -18,56 +18,44 @@ public class DnaResovlerTest
             "AGGGTCG"
         };
 
-        Assert.Equal(false, MutantResolver.Resolve(dna));
-    }
-
-    [Fact]
-    public void WhenTheDnaIsMutant()
-    {   
-        string[] dna = new string[] {
-            "GTGTGTA",
-            "CGTCTAA",
-            "TCTCATA",
-            "ACTATGC",
-            "GAATGAC",
-            "CAACTAG",
-            "AGGGTCG"
-        };
-        
-        Assert.Equal(true, MutantResolver.Resolve(dna));
+        Assert.False(MutantResolver.Resolve(dna));
     }
 
     [Fact]
     public void WhenTheDnaIsLargeAndIsMutant()
-    {   
+    {
         string[] dna = new string[] {
             "GTGTGTA",
             "CGTCTAA",
             "TCTCATA",
             "ACTATGC",
-            "GAATGAC",
+            "GAATTAC",
             "CAACTAG",
             "AGGGTCG"
         };
-        
-        Assert.Equal(true, MutantResolver.Resolve(dna));
+
+        Assert.True(MutantResolver.Resolve(dna));
     }
 
     [Fact]
-    public void WhenTheDnaLenIsLessThanPattern()
-    {   
+    public void WhenTheDnaIsMutant()
+    {
         string[] dna = new string[] {
-            "GTG",
-            "CGT",
-            "TCT",
+            "GTGTGTA",
+            "CGTCTAA",
+            "TCTCATA",
+            "ACTATGC",
+            "GAATTAC",
+            "CAACTAG",
+            "AGGGTCG"
         };
-        
-        Assert.Equal(false, MutantResolver.Resolve(dna));
+
+        Assert.True(MutantResolver.Resolve(dna));
     }
 
     [Fact]
     public void WhenTheDnaIsMutantPatternContinuesX()
-    {    
+    {
         string[] dna = new string[] {
             "ACGTAC",
             "ACGTAC",
@@ -76,13 +64,13 @@ public class DnaResovlerTest
             "ACGTAC",
             "CAACTA"
         };
-        
-        Assert.Equal(true, MutantResolver.Resolve(dna));
+
+        Assert.True(MutantResolver.Resolve(dna));
     }
 
     [Fact]
     public void WhenTheDnaIsMutantPatternContinuesY()
-    {    
+    {
         string[] dna = new string[] {
             "ACAGAA",
             "ACGTAC",
@@ -91,7 +79,19 @@ public class DnaResovlerTest
             "ACGTAA",
             "CAACTA"
         };
-        
-        Assert.Equal(true, MutantResolver.Resolve(dna));
+
+        Assert.True(MutantResolver.Resolve(dna));
+    }
+
+    [Fact]
+    public void WhenTheDnaLenIsLessThanPattern()
+    {
+        string[] dna = new string[] {
+            "GTG",
+            "CGT",
+            "TCT",
+        };
+
+        Assert.False(MutantResolver.Resolve(dna));
     }
 }
