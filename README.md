@@ -36,6 +36,17 @@ set ASPNETCORE_URLS="http://localhost:8080;https://localhost:8443"
 
 `dotnet run --project api/meli-mutations/meli-mutations.csproj --launch-profile meli_mutations`
 
+### Run Test
+
+`dotnet test`
+
+### Docker
+
+```
+docker build docker/Dockerfile
+docker run --publish 80:80 <image>
+```
+
 ## Endpoints 
 
 Healtcheck (GET): https://meli.code2.me/dna/healthcheck
