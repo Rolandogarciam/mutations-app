@@ -1,13 +1,16 @@
 using Azure.Data.Tables;
 using meli_mutations.Db;
 using meli_mutations.Repository;
+using System.Diagnostics.CodeAnalysis;
 using static meli_mutations.Entity.Entities;
 
 namespace meli_mutations;
 
-public class Program 
+[ExcludeFromCodeCoverage]
+public class Program
 {
-    public static void Main(string[] args) {
+    public static void Main(string[] args)
+    {
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -19,7 +22,6 @@ public class Program
         builder.Services.AddSingleton<ITableStorageService<Mutant>>(provider =>
             new TableStorageService<Mutant>(provider.GetRequiredService<TableServiceClient>(), "mutant-entities"));
         builder.Services.AddScoped<IMutantRepository, MutantRepository>();
-
 
         builder.Services.AddSwaggerGen();
 
@@ -40,4 +42,4 @@ public class Program
 
         app.Run();
     }
-} 
+}

@@ -1,9 +1,12 @@
 using Azure;
 using Azure.Data.Tables;
+using System.Diagnostics.CodeAnalysis;
 
 namespace meli_mutations.Entity;
 
-public class Entities {
+[ExcludeFromCodeCoverage]
+public class Entities
+{
     public record Mutant : ITableEntity
     {
         public string RowKey { get; set; } = default!;
