@@ -43,7 +43,7 @@ set ASPNETCORE_URLS="http://localhost:8080;https://localhost:8443"
 ### Docker
 
 ```
-docker build docker/Dockerfile
+docker build . -f docker/Dockerfile
 docker run --publish 80:80 <image>
 ```
 
