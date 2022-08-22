@@ -134,7 +134,7 @@ public static class MutantResolver
                     || coordinateX == coordinateFoundX + 2
                     || coordinateX == coordinateFoundX + 3)
                     && (
-                    coordinateX == coordinateFoundX
+                    coordinateY == coordinateFoundY
                     || coordinateY == coordinateFoundY + 1
                     || coordinateY == coordinateFoundY + 2
                     || coordinateY == coordinateFoundY + 3);

@@ -115,6 +115,25 @@ namespace meli_test.Resolver
         }
 
         [Fact]
+        public void WhenTheDnaIsMutantWithSameDirectionObliqueNorthEast()
+        {
+            // See main diagonal
+            string[] dna = new string[] {
+                "CCGTACGTAC",
+                "ATGTACGTCC",
+                "CTAGTTCCTT",
+                "CCTTGTCCTT",
+                "TTTCACGGGA",
+                "AAGTCCCTAG",
+                "ACGCGTGCCT",
+                "GGCTTAGGAC",
+                "TCCGACGTAC",
+                "AGCGGTACAA"
+            };
+            Assert.True(MutantResolver.Resolve(dna));
+        }
+
+        [Fact]
         public void WhenTheDnaIsMutantWithSameDirectionVertical()
         {
             string[] dna = new string[] {
